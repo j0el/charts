@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<body>
+    <div id="colFilter_div"></div>
+    <div id="chart_div"></div>
+
+    <script>
+        google.load('visualization', 'current', { packages: ['controls'] });
+        google.setOnLoadCallback(drawChart);
+
+        google.charts.load('current', { packages: ['corechart'] });
+
+        function drawChart() {
+            var bacData = new google.visualization.DataTable();
+            bacData.addColumn('string', 'Date');
+            bacData.addColumn('string', 'WDM');
+            bacData.addColumn('number', 'Rain');
+            bacData.addColumn('number', 'CIH-04 Wooley Gate');
+            bacData.addColumn('number', 'CIH-05 5th St. Drain');
+            bacData.addColumn('number', 'CIH-06 Seabridge Shallow Bay');
+            bacData.addColumn('number', 'CIH-07 Westport');
+            bacData.addColumn('number', 'CIH-08 Hemlock MS4');
+            bacData.addColumn('number', 'CIH-13 Oxnard West MS4');
+            bacData.addColumn('number', 'CIH-20 Eastborne Bay');
+            bacData.addColumn('number', 'CIH-28 Oxnard DUnes');
+            bacData.addColumn('number', 'CIH-29 Doris Drain');
+            bacData.addColumn('number', 'CIH-30 Harbor Bridge');
+            bacData.addRows([
+                ['2/17/21', 'Dry', 0, 10, 31, 10, 10, 63, 20, 10, 10, 10, 10],
+                ['3/24/21', 'Monthly', 0, 10, 10, 10, 10, 41, 158, 10, 10, 20, 10],
+                ['4/21/21', 'Monthly', 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 20],
+                ['5/12/21', 'Monthly', 0, 10, 10, 10, 10, 10, 10, 115, 20, 10, 10],
+                ['6/9/21', 'Monthly', 0, 52, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+                ['7/14/21', 'Monthly', 0, 10, 10, 10, 10, 10, 20, 10, 41, 467, 10],
+                ['8/11/21', 'Monthly', 0, 10, 141, 10, 10, 10, 10, 10, 10, 161, 61],
+                ['9/8/21', 'Monthly', 0, 20, 31, 10, 10, 1236, 10, 10, 10, 30, 10],
+                ['10/13/23', 'Monthly', 0, 10, 10, 10, 10, 52, 31, 10, 20, 31, 10],
+                ['10/26/21', 'Wet', 0.82, 1274, 960, 63, 31, , , , 1017, 909, 241],
+                ['12/15/21', 'Wet', 1.36, 1421, 2489, 144, 109, 3873, 9208, 1670, 1374, 2224, 6131],
+                ['12/22/21', 'Bact. Only', 0, 10, 110, 10, 10, 110, 161, 10, 10, , 10],
+                ['3/29/22', 'Wet', 1.09, 1935, 2613, 185, 355, 3654, 15531, 594, 1354, 1515, 4611,],
+                ['12/12/22', 'Wet', 0.7, 19863, 24196, 355, 160, 5172, 24196, 11199, 24196, 24196, 24196,],
+                ['1/11/23', 'Wet', 1.41, 8664, 6488, 2247, 4106, 2481, 1789, 14136, 19863, 19863, 24196,],
+                ['2/8/23', 'Dry', 0, 10, 73, 10, 10, 10, 10, 10, 10, 10, 30],
+                ['3/15/23', 'Wet', 2.75, 8164, 3873, 2613, 2282, 24196, 24196, 4611, 6488, 6867, 9804,],
+                ['4/12/23', 'Monthly', 0, 10, 30, 10, 10, 368, 1850, 10, 10, 10, 20],
+                ['5/10/23', 'Not sampled', , , , , , , , , , , ,],
+                ['6/14/23', 'Monthly', 0, 10, 10, 10, 10, 75, 20, 10, 10, 10, 10],
+                ['7/12/23', 'Monthly', 0, 10, 10, 10, 10, 10, 10, 10, 10, 20, 10],
+                ['8/9/23 ', 'Monthly', 0, 10, 97, 10, 10, 20, 10, 10, 10, 10, 10],
+                ['9/13/23', 'Monthly', 0, 10, 10, 10, 10, 10, 20, 10, 10, 10, 73],
+                ['10/11/23', 'Monthly', 0, 10, 10, 10, 10, 10, 10, 10, 10, 216, 73],
+                ['11/8/23', 'Monthly', 0, 10, 10, 10, 10, 10, 10, 10, , , 10],
+                ['1/16/24', 'Monthly', 0, 41, 10, 10, 10, 31, 85, 10, 52, 30, 10],
+                ['2/21/24', 'Wet', 3.39, 3873, 4569, 2282, 1081, 24196, 15531, 6867, 4352, 6488, 5475,],
+            ]);
+
+            var columnsTable = new google.visualization.DataTable();
+            columnsTable.addColumn('number', 'colIndex');
+            columnsTable.addColumn('string', 'colLabel');
+            var initState = { selectedValues: [] };
+            // put the columns into this data table (skip column 0,1,2)
+            for (var i = 3; i < bacData.getNumberOfColumns(); i++) {
+                columnsTable.addRow([i, bacData.getColumnLabel(i)]);
+                // you can comment out this next line if you want to have a default selection other than the whole list
+                // initState.selectedValues.push(bacData.getColumnLabel(i));
+            }
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'ColumnChart',
+                containerId: 'chart_div',
+                dataTable: bacData,
+                options: {
+                    title: 'Bacteria in Channel Islands Harbor',
+                    width: 1000,
+                    height: 800,
+                    vAxis: {
+                        scaleType: 'log'
+                    },
+                    chartArea: { width: '80%', height: '80%' },
+                    legend: { position: 'bottom' }
+                },
+            });
+            var columnFilter = new google.visualization.ControlWrapper({
+                controlType: 'CategoryFilter',
+                containerId: 'colFilter_div',
+                dataTable: columnsTable,
+                options: {
+                    filterColumnLabel: 'colLabel',
+                    ui: {
+                        label: 'Collection Points',
+                        caption: 'Choose Here',
+                        allowTyping: false,
+                        allowMultiple: true,
+                        allowNone: true,
+                        labelStacking: 'horizontal',
+                        selectedValuesLayout: 'horizontal',
+                    },
+                },
+                state: initState,
+            });
+
+            function setChartView() {
+                var state = columnFilter.getState();
+                var row;
+                var view = {
+                    columns: [0],
+                };
+                for (var i = 0; i < state.selectedValues.length; i++) {
+                    row = columnsTable.getFilteredRows([
+                        { column: 1, value: state.selectedValues[i] },
+                    ])[0];
+                    view.columns.push(columnsTable.getValue(row, 0));
+                }
+                // sort the indices into their original order
+                view.columns.sort(function (a, b) {
+                    return a - b;
+                });
+                chart.setView(view);
+                chart.draw();
+            }
+            google.visualization.events.addListener(
+                columnFilter,
+                'statechange',
+                setChartView
+            );
+
+            setChartView();
+            columnFilter.draw();
+        }
+    </script>
+</body>
+
+</html>
