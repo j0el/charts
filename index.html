@@ -67,7 +67,6 @@
                 // you can comment out this next line if you want to have a default selection other than the whole list
                 // initState.selectedValues.push(bacData.getColumnLabel(i));
             }
-            initState.selectedValues.push(bacData.getColumnLabel(3));
 
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'ColumnChart',
@@ -94,7 +93,7 @@
                         label: 'Collection Points',
                         caption: 'Choose Here',
                         allowTyping: false,
-                        allowMultiple: false,
+                        allowMultiple: true,
                         allowNone: true,
                         labelStacking: 'horizontal',
                         selectedValuesLayout: 'horizontal',
@@ -127,7 +126,6 @@
                 'statechange',
                 setChartView
             );
-
 
             setChartView();
             columnFilter.draw();
